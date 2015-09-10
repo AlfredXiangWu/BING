@@ -1,12 +1,14 @@
 #include "stdafx.h"
 
+#pragma once
+
 class DataSet
 {
 public:
 	DataSet(CStr  &imgPath, CStr &listPath, CStr &frPath);
-	~DataSet(void);
+	~DataSet(void){};
 	
-	void loadAnnotations();
+	//void loadAnnotations();
 	static inline double interUnio(const Vec4i &box1, const Vec4i &box2);
 
 	int testNum;
@@ -20,9 +22,9 @@ private:
 	string frPath;
 	vecS imgPathFr;
 
+	string replaceExtName(CStr &fName, char* ext);
 	vecS loadStrList(CStr &fName);
 	vecS loadFrList(vecS &imgPathName);
-	string replaceExtName(CStr &fName, char* ext);
 };
 
 double DataSet::interUnio(const Vec4i &bb, const Vec4i &bbgt)

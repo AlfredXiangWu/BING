@@ -18,9 +18,36 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CmShow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterBING.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DataSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CmShow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterBING.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ValStructVec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Objectness_test.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Dataset.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
