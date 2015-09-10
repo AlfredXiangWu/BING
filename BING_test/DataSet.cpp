@@ -64,3 +64,54 @@ vecS DataSet::loadFrList(vecS &imgPathName)
 	return strs;
 }
 
+
+void DataSet::loadAnnotations()
+{
+	vector<Vec4i> boxes;
+	for (int i = 0; i < testNum; i++)
+	{
+		if(!loadFrs((frPath + "\\" + imgPathFr[i]), boxes))
+			printf("Load %s error\n", imgPathFr[i]);
+		imgFr.push_back(boxes);
+		boxes.clear();
+	}
+}
+
+int DataSet::loadFrs(CStr &frName, vector<Vec4i> &boxes)
+{
+	ifstream frIn(frName);
+	string line;
+	getline(frIn, line);
+	int numFace = atoi(line.c_str());
+	for (int i = 0; i < numFace; i++)
+	{
+		if(!(getline(frIn, line) && line.size()))
+			return false;
+		vecS temp = stringSplit(line, string("\t"));
+		if (temp.size() !=4)
+			return false;
+		boxes.push_back(Vec4i(atoi(temp[0].c_str()), atoi(temp[1].c_str()), atoi(temp[2].c_str()), atoi(temp[3].c_str())));
+	}
+	return true;
+}
+
+vecS DataSet::stringSplit(string &str, string &pattern)
+{
+	vecS ret;
+	std::string::size_type pos;
+	str += pattern;
+	int length = str.length();
+	int start = 0;
+
+	for (int i = 0; i < length; i++)
+	{
+		pos = str.find(pattern, i);
+		if(pos < length)
+		{
+			string s = str.substr(i, pos - i);
+			ret.push_back(s);
+			i = pos + pattern.size() - 1;
+		}
+	}
+	return ret;
+}

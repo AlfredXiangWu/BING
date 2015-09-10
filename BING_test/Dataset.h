@@ -8,23 +8,25 @@ public:
 	DataSet(CStr  &imgPath, CStr &listPath, CStr &frPath);
 	~DataSet(void){};
 	
-	//void loadAnnotations();
+	void loadAnnotations();
 	static inline double interUnio(const Vec4i &box1, const Vec4i &box2);
 
+	string imgPath;
+	string listPath;
+	string frPath;
+	vecS imgPathFr;
 	int testNum;
 	vecS imgPathName;
 	vector<vector<Vec4i>> imgFr;
 
 
 private:
-	string imgPath;
-	string listPath;
-	string frPath;
-	vecS imgPathFr;
-
 	string replaceExtName(CStr &fName, char* ext);
 	vecS loadStrList(CStr &fName);
 	vecS loadFrList(vecS &imgPathName);
+
+	int loadFrs(CStr &frName, vector<Vec4i> &boxes);
+	vecS stringSplit(string &str, string &pattern);
 };
 
 double DataSet::interUnio(const Vec4i &bb, const Vec4i &bbgt)
