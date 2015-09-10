@@ -30,6 +30,9 @@
     <ClCompile Include="DataSet.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectnessTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -44,10 +47,10 @@
     <ClInclude Include="ValStructVec.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Objectness_test.h">
+    <ClInclude Include="Dataset.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Dataset.h">
+    <ClInclude Include="ObjectnessTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

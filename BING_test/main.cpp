@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #include "ValStructVec.h"
-#include "Objectness_test.h"
+#include "ObjectnessTest.h"
 #include "Dataset.h"
 
 void RunFaceProposal(int W, int NSS, int numPerSz);
@@ -16,9 +16,12 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
 	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
 	string frPath = "Z:\\User\\team02\\data1\\FDDB\\man";
+	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 
-	DataSet fddb(imgPath, listPath, frPath);
-	fddb.loadAnnotations();
+	DataSet dataSet(imgPath, listPath, frPath);
+	dataSet.loadAnnotations();
+
+	ObjectnessTest objectNessTest(dataSet, modelPath, 8, 2);
 	
-
+	objectNessTest.loadTrainedModel(modelPath);
 }
