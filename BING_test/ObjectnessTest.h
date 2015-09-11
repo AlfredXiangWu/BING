@@ -27,4 +27,6 @@ private:
 	string _modelPath;
 	Mat _svmFilter; //Filters learned at stage I
 	FilterBING _bingF;   // BING Filter
+
+	bool matRead(const string& filename, Mat& _M);
 };
