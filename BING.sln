@@ -31,7 +31,8 @@ Global
 		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|Mixed Platforms.ActiveCfg = Release|Itanium
 		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|Mixed Platforms.Build.0 = Release|Itanium
 		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|Win32.ActiveCfg = Release|Itanium
-		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|x64.ActiveCfg = Release|Itanium
+		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|x64.ActiveCfg = Release|x64
+		{798D450C-A6F2-42A6-B1AD-CEA71F404112}.Release|x64.Build.0 = Release|x64
 		{2B4DAA3E-911C-49EA-9804-85F1EF420782}.Debug|Itanium.ActiveCfg = Debug|Itanium
 		{2B4DAA3E-911C-49EA-9804-85F1EF420782}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{2B4DAA3E-911C-49EA-9804-85F1EF420782}.Debug|Mixed Platforms.Build.0 = Debug|Win32

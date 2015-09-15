@@ -36,6 +36,7 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 	printf("Start predicting\n");
 	for (int i = 0; i < testNum; i++)
 	{
+		printf("Process %d images..\n", i);
 		Mat img = imread(_dataSet.imgPath + "\\" + _dataSet.imgPathName[i]);
 		getFaceProposaksForPerImgFast(img, boxesTests[i], numDetPerSize);
 	}
