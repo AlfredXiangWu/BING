@@ -18,6 +18,7 @@ public:
 	void getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs, int numDetPerSize);
 	void getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &frsPerImg, int numDetPerSize);
 
+	void evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTests, const int numDet);
 
 private:
 	const int _W;
@@ -40,4 +41,6 @@ private:
 
 	//Non-maximal suppress
 	static void nonMaxSup(CMat &matchCost1f, ValStructVec<float, Point> &matchCost, int NSS = 1, int maxPoint = 50, bool fast = true);
+
+	
 };

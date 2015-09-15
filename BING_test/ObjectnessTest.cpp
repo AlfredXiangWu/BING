@@ -48,6 +48,8 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 		for (int j = 0; j < boxesTests[i].size(); j++)
 			_frsImgs[i][j] = boxesTests[i][j];
 	}
+
+	evaluatePerImgRecall(_frsImgs, 10000);
 }
 
 // for single image
@@ -259,4 +261,50 @@ void ObjectnessTest::nonMaxSup(CMat &matchCost1f, ValStructVec<float, Point> &ma
 		if (matchCost.size() >= maxPoint)
 			return;
 	}
+}
+
+void ObjectnessTest::evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTests, const int numDet)
+{
+	vecD recalls(numDet);
+	vecD avgScore(numDet);
+	const int TEST_NUM = _dataSet.testNum;
+	for (int i = 0; i < TEST_NUM; i++){
+		const vector<Vec4i> &boxesGT = _dataSet.imgFr[i];
+		const vector<Vec4i> &boxes = boxesTests[i];
+		const int gtNumCrnt = boxesGT.size();
+		vecI detected(gtNumCrnt);
+		vecD score(gtNumCrnt);
+		double sumDetected = 0, abo = 0;
+		for (int j = 0; j < numDet; j++){
+			if (j >= (int)boxes.size()){
+				recalls[j] += sumDetected/gtNumCrnt;
+				avgScore[j] += abo/gtNumCrnt;
+				continue;
+			}
+
+			for (int k = 0; k < gtNumCrnt; k++)	{
+				double s = DataSet::interUnio(boxes[j], boxesGT[k]);
+				score[k] = max(score[k], s);
+				detected[k] = score[k] >= 0.5 ? 1 : 0;
+			}
+			sumDetected = 0, abo = 0;
+			for (int k = 0; k < gtNumCrnt; k++)	
+				sumDetected += detected[k], abo += score[k];
+			recalls[j] += sumDetected/gtNumCrnt;
+			avgScore[j] += abo/gtNumCrnt;
+		}
+	}
+
+	for (int i = 0; i < numDet; i++){
+		recalls[i] /=  TEST_NUM;
+		avgScore[i] /= TEST_NUM;
+	}
+
+	int idx[8] = {1, 10, 100, 1000, 2000, 3000, 4000, 5000};
+	for (int i = 0; i < 8; i++){
+		if (idx[i] > numDet)
+			continue;
+		printf("%d:%.3g,%.3g\t", idx[i], recalls[idx[i] - 1], avgScore[idx[i] - 1]);
+	}
+	printf("\n");
 }
