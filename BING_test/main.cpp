@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "ValStructVec.h"
+#include "ValStructVec.h";
 #include "ObjectnessTest.h"
 #include "Dataset.h"
 
@@ -14,9 +14,11 @@ void main(int argc, char* argv[])
 void RunFaceProposal(int W, int NSS, int numPerSz)
 {
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
-	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\test.txt";
 	string frPath = "Z:\\User\\team02\\data1\\FDDB\\man";
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
+
+	vector<vector<Vec4i>> frsImgs;
 
 	DataSet dataSet(imgPath, listPath, frPath);
 	dataSet.loadAnnotations();
@@ -24,4 +26,5 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	ObjectnessTest objectNessTest(dataSet, modelPath, 8, 2);
 	
 	objectNessTest.loadTrainedModel(modelPath);
+	objectNessTest.getFaceProposalsForImgsFast(frsImgs, 130);
 }
