@@ -81,3 +81,6 @@ inline Rect Vec4i2Rect(Vec4i &v){return Rect(Point(v[0] - 1, v[1] - 1), Point(v[
 //#include "CmFile.h"
 //#include "CmTimer.h"
 
+#include <direct.h>  
+#include <io.h> 
+

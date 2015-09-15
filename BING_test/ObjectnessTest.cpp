@@ -42,7 +42,12 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 
 	// save
 	_frsImgs.resize(testNum);
-
+	for (int i = 0; i < testNum; i++)
+	{
+		_frsImgs[i].resize(boxesTests[i].size());
+		for (int j = 0; j < boxesTests[i].size(); j++)
+			_frsImgs[i][j] = boxesTests[i][j];
+	}
 }
 
 // for single image
@@ -52,10 +57,10 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	const int maxFace = min(imgW, imgH);
 	const int minFace = 12;
-	const float maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
-	for (float scale = maxScale; scale >= minScale; scale = scale * 0.9)
+	const double maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
+	for (double scale = maxScale; scale >= minScale; scale = scale * 0.9)
 	{
-		 int height = cvRound(imgH * scale), width = cvRound(imgW * scale);
+		int height = cvRound(imgH * scale), width = cvRound(imgW * scale);
 		Mat im3u, matchCost1f, mag1u;
 
 		// NG feature extract and process
@@ -80,9 +85,7 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 			frsPerImg.push_back(box); 
 		}
 	}
-
-	// predict stage II ( The stage is not used for our task)
-	
+	//NOTE: predict stage II  is not used for our task
 }
 
 // Read matrix from binary file
