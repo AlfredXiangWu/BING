@@ -74,15 +74,15 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 		nonMaxSup(matchCost1f, matchCost, _NSS, numDetPerSize, 1);
 
 		// Find true locations 
-		double ratioX = width/_W, ratioY = height/_W;
+		double ratioX = min(height, width)/_W, ratioY = min(height, width)/_W;
 		int iMax = min(matchCost.size(), numDetPerSize);
 		for (int i = 0; i < iMax; i++)
 		{
 			float mVal = matchCost(i);
 			Point pnt = matchCost[i];
 			Vec4i box(cvRound(pnt.x * ratioX), cvRound(pnt.y*ratioY));
-			box[2] = cvRound(min(box[0] + width, imgW));
-			box[3] = cvRound(min(box[1] + height, imgH));
+			box[2] = cvRound(min(box[0] + min(height, width), imgW));
+			box[3] = cvRound(min(box[1] + min(height, width), imgH));
 			box[0] ++;
 			box[1] ++;
 			frsPerImg.push_back(box); 
@@ -308,4 +308,35 @@ void ObjectnessTest::evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTest
 		printf("%d:%.3g,%.3g\t", idx[i], recalls[idx[i] - 1], avgScore[idx[i] - 1]);
 	}
 	printf("\n");
+}
+
+void ObjectnessTest::illuTestReults(string &imgPath, string &savePath, const vector<Vec4i> &gtBoxesTest, const vector<Vec4i> &boxesTests)
+{
+	const int gtNumCrnt = gtBoxesTest.size();
+	Mat img = imread(imgPath);
+	Mat bboxMatchImg = Mat::zeros(img.size(), CV_32F);
+
+	vecD score(gtNumCrnt);
+	vector<Vec4i> bboxMatch(gtNumCrnt);
+	for (int j = 0; j < boxesTests.size(); j++)
+	{
+		const Vec4i &bb = boxesTests[j];
+		for (int k = 0; k < gtNumCrnt; k++)	{
+			double mVal = DataSet::interUnio(boxesTests[j], gtBoxesTest[k]);
+			if (mVal < score[k])
+				continue;
+			score[k] = mVal;
+			bboxMatch[k] = boxesTests[j];
+		}
+	}
+
+	for (int k = 0; k < gtNumCrnt; k++)
+	{
+		const Vec4i &bb = bboxMatch[k];
+		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(0), 3);
+		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(255, 255, 255), 2);
+		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(0, 0, 255), 1);
+	}
+
+	imwrite(savePath, img);
 }

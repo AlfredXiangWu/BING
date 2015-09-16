@@ -19,6 +19,7 @@ public:
 	void getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &frsPerImg, int numDetPerSize);
 
 	void evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTests, const int numDet);
+	void illuTestReults(string &imgPath, string &savePath, const vector<Vec4i> &gtBoxesTest, const vector<Vec4i> &boxesTests);
 
 private:
 	const int _W;
