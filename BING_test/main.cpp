@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "ValStructVec.h"
 #include "ObjectnessTest.h"

@@ -15,7 +15,7 @@ public:
 	string listPath;
 	string frPath;
 	vecS imgPathFr;
-	int testNum;
+	int trainNum;
 	vecS imgPathName;
 	vector<vector<Vec4i>> imgFr;
 

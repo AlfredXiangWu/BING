@@ -42,6 +42,4 @@ private:
 
 	//Non-maximal suppress
 	static void nonMaxSup(CMat &matchCost1f, ValStructVec<float, Point> &matchCost, int NSS = 1, int maxPoint = 50, bool fast = true);
-
-	
 };
