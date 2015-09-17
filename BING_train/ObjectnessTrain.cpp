@@ -6,6 +6,7 @@
 void ObjectnessTrain::trainObjectnessModel()
 {
 	generateTrainData();
+	trainStageI();
 
 }
 
@@ -13,6 +14,7 @@ void ObjectnessTrain::generateTrainData()
 {
 	const int trainNum = _dataSet.trainNum;
 	const int NUM_NEG_BOX = 100; // nubmer of negative windows sampled from each image
+	vector<Mat> xTrainP, xTrainN;
 	xTrainP.reserve(1000000);
 	xTrainN.reserve(1000000);
 
@@ -47,9 +49,28 @@ void ObjectnessTrain::generateTrainData()
 				xTrainN.push_back(getFeature(im3u, bb));
 		}
 	}
+
+	int numP = xTrainP.size();
+	int numN = xTrainN.size();
+	int iP = 0, iN = 0;
+	Mat xP1f(numP, _W*_W, CV_32F), xN1f(numN, _W*_W, CV_32F);
+	for (int i = 0; i < numP; i++)
+	{
+		memcpy(xP1f.ptr(iP++), xTrainP[i].data, _W*_W*sizeof(float));
+	}
+	for (int i = 0; i < numN; i++)
+	{
+		memcpy(xN1f.ptr(iN++), xTrainN[i].data, _W*_W*sizeof(float));
+	}
+
+	matWrite(_modelPath + "data" + ".xP", xP1f);
+	matWrite(_modelPath + "data" + ".xN", xN1f);
 }
 
-
+void ObjectnessTrain::trainStageI()
+{
+	vec
+}
 
 Mat ObjectnessTrain::getFeature(CMat &img3u, const Vec4i &bb)
 {
@@ -170,4 +191,41 @@ void ObjectnessTrain::gradientXY(CMat &x1i, CMat &y1i, Mat &mag1u)
 		for (int c = 0; c < W; c++)
 			m[c] = min(x[c] + y[c], 255);   //((int)sqrt(sqr(x[c]) + sqr(y[c])), 255);
 	}
+}
+
+// Write matrix to binary file
+bool ObjectnessTrain::matWrite(CStr& filename, CMat& _M)
+{
+	Mat M;
+	_M.copyTo(M);
+	FILE* file = fopen(_S(filename), "wb");
+	if (file == NULL || M.empty())
+		return false;
+	fwrite("CmMat", sizeof(char), 5, file);
+	int headData[3] = {M.cols, M.rows, M.type()};
+	fwrite(headData, sizeof(int), 3, file);
+	fwrite(M.data, sizeof(char), M.step * M.rows, file);
+	fclose(file);
+	return true;
+}
+
+// Read matrix from binary file
+bool ObjectnessTrain::matRead(const string& filename, Mat& _M)
+{
+	FILE* f = fopen(_S(filename), "rb");
+	if (f == NULL)
+		return false;
+	char buf[8];
+	int pre = fread(buf,sizeof(char), 5, f);
+	if (strncmp(buf, "CmMat", 5) != 0)	{
+		printf("Invalidate CvMat data file %s\n", _S(filename));
+		return false;
+	}
+	int headData[3]; // Width, height, type
+	fread(headData, sizeof(int), 3, f);
+	Mat M(headData[1], headData[0], headData[2]);
+	fread(M.data, sizeof(char), M.step * M.rows, f);
+	fclose(f);
+	M.copyTo(_M);
+	return true;
 }

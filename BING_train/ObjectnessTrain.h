@@ -24,9 +24,9 @@ private:
 	
 	DataSet _dataSet;
 	string _modelPath;
-	vector<Mat> xTrainP, xTrainN;
 
 	void generateTrainData();
+	void trainStageI();
 
 	Mat getFeature(CMat &img3u, const Vec4i &bb);
 	void gradientMag(CMat &imgBGR3u, Mat &mag1u);
@@ -38,5 +38,8 @@ private:
 	inline double maxIntUnion(const Vec4i &bb, const vector<Vec4i> &bbgts) {double maxV = 0; for(size_t i = 0; i < bbgts.size(); i++) maxV = max(maxV, DataSet::interUnio(bb, bbgts[i])); return maxV; }
 
 	static inline int bgrMaxDist(const Vec3b &u, const Vec3b &v) {int b = abs(u[0]-v[0]), g = abs(u[1]-v[1]), r = abs(u[2]-v[2]); b = max(b,g);  return max(b,r);}
+
+	bool matWrite(CStr& filename, CMat& _M);
+	bool matRead(const string& filename, Mat& _M);
 
 };
