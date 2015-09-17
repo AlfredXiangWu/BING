@@ -5,16 +5,18 @@
 
 void ObjectnessTrain::trainObjectnessModel()
 {
+	cout << "Generating training data..." << endl;
 	generateTrainData();
+	cout <<"Training model.." <<endl;
 	trainStageI();
-
+	cout << "Training complete.." <<endl;
 }
 
 void ObjectnessTrain::generateTrainData()
 {
 	const int trainNum = _dataSet.trainNum;
 	const int NUM_NEG_BOX = 100; // nubmer of negative windows sampled from each image
-	vector<Mat> xTrainP, xTrainN;
+	//vector<Mat> xTrainP, xTrainN;
 	xTrainP.reserve(1000000);
 	xTrainN.reserve(1000000);
 
@@ -63,13 +65,26 @@ void ObjectnessTrain::generateTrainData()
 		memcpy(xN1f.ptr(iN++), xTrainN[i].data, _W*_W*sizeof(float));
 	}
 
-	matWrite(_modelPath + "data" + ".xP", xP1f);
-	matWrite(_modelPath + "data" + ".xN", xN1f);
+	matWrite(_modelPath + "\\" + "data" + ".xP", xP1f);
+	matWrite(_modelPath + "\\" + "data" + ".xN", xN1f);
+
 }
 
 void ObjectnessTrain::trainStageI()
 {
-	vec
+	vector<Mat> pX, nX;
+	pX.reserve(200000), nX.reserve(200000);
+	Mat xP1f, xN1f;
+	CV_Assert(matRead(_modelPath + "\\" + "data" + ".xP", xP1f) && matRead(_modelPath + "\\" + "data" + ".xN", xN1f));
+	for (int r = 0; r < xP1f.rows; r++)
+		pX.push_back(xP1f.row(r));
+	for (int r = 0; r < xN1f.rows; r++)
+		nX.push_back(xN1f.row(r));
+
+	Mat crntW = trainSVM(pX, nX, L1R_L2LOSS_SVC, 10, 1);
+	crntW = crntW.colRange(0, crntW.cols - 1).reshape(1, _W);
+	CV_Assert(crntW.size() == Size(_W, _W));
+	matWrite(_modelPath + "\\" + "ObjNessB2W8MAXBGR" + ".wS1", crntW);
 }
 
 Mat ObjectnessTrain::getFeature(CMat &img3u, const Vec4i &bb)
@@ -191,6 +206,91 @@ void ObjectnessTrain::gradientXY(CMat &x1i, CMat &y1i, Mat &mag1u)
 		for (int c = 0; c < W; c++)
 			m[c] = min(x[c] + y[c], 255);   //((int)sqrt(sqr(x[c]) + sqr(y[c])), 255);
 	}
+}
+
+Mat ObjectnessTrain::trainSVM(const vector<Mat> &pX1f, const vector<Mat> &nX1f, int sT, double C, double bias, double eps, int maxTrainNum)
+{
+	vecI ind(nX1f.size());
+	for (size_t i = 0; i < ind.size(); i++)
+		ind[i] = i;
+	int numP = pX1f.size(), feaDim = pX1f[0].cols;
+	int totalSample = numP + nX1f.size();
+	if (totalSample > maxTrainNum)
+		random_shuffle(ind.begin(), ind.end());
+	totalSample = min(totalSample, maxTrainNum);
+	Mat X1f(totalSample, feaDim, CV_32F);
+	vecI Y(totalSample);
+	for(int i = 0; i < numP; i++){
+		pX1f[i].copyTo(X1f.row(i));
+		Y[i] = 1;
+	}
+	for (int i = numP; i < totalSample; i++){
+		nX1f[ind[i - numP]].copyTo(X1f.row(i));
+		Y[i] = -1;
+	}
+	return trainSVM(X1f, Y, sT, C, bias, eps);
+}
+
+// Training SVM with feature vector X and label Y. 
+// Each row of X is a feature vector, with corresponding label in Y.
+// Return a CV_32F weight Mat
+Mat ObjectnessTrain::trainSVM(CMat &X1f, const vecI &Y, int sT, double C, double bias, double eps)
+{
+	// Set SVM parameters
+	parameter param; {
+		param.solver_type = sT; // L2R_L2LOSS_SVC_DUAL;
+		param.C = C;
+		param.eps = eps; // see setting below
+		param.p = 0.1;
+		param.nr_weight = 0;
+		param.weight_label = NULL;
+		param.weight = NULL;
+		CV_Assert(X1f.rows == Y.size() && X1f.type() == CV_32F);
+	}
+
+	// Initialize a problem
+	feature_node *x_space = NULL;
+	problem prob;{
+		prob.l = X1f.rows;
+		prob.bias = bias;
+		prob.y = Malloc(double, prob.l);
+		prob.x = Malloc(feature_node*, prob.l);
+		const int DIM_FEA = X1f.cols;
+		prob.n = DIM_FEA + (bias >= 0 ? 1 : 0);
+		x_space = Malloc(feature_node, (prob.n + 1) * prob.l);
+		int j = 0;
+		for (int i = 0; i < prob.l; i++){
+			prob.y[i] = Y[i];
+			prob.x[i] = &x_space[j];
+			const float* xData = X1f.ptr<float>(i);
+			for (int k = 0; k < DIM_FEA; k++){
+				x_space[j].index = k + 1;
+				x_space[j++].value = xData[k];
+			}
+			if (bias >= 0){
+				x_space[j].index = prob.n;
+				x_space[j++].value = bias;
+			}
+			x_space[j++].index = -1;
+		}
+		CV_Assert(j == (prob.n + 1) * prob.l);
+	}
+
+	// Training SVM for current problem
+	const char*  error_msg = check_parameter(&prob, &param);
+	if(error_msg){
+		fprintf(stderr,"ERROR: %s\n",error_msg);
+		exit(1);
+	}
+	model *svmModel = train(&prob, &param);
+	Mat wMat(1, prob.n, CV_64F, svmModel->w);
+	wMat.convertTo(wMat, CV_32F);
+	free_and_destroy_model(&svmModel);
+	destroy_param(&param);
+	free(prob.y);
+	free(prob.x);
+	free(x_space);
+	return wMat;
 }
 
 // Write matrix to binary file

@@ -4,6 +4,7 @@
 
 
 #pragma once
+#define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 class ObjectnessTrain
 {
@@ -24,6 +25,7 @@ private:
 	
 	DataSet _dataSet;
 	string _modelPath;
+	vector<Mat> xTrainP, xTrainN;
 
 	void generateTrainData();
 	void trainStageI();
@@ -41,5 +43,8 @@ private:
 
 	bool matWrite(CStr& filename, CMat& _M);
 	bool matRead(const string& filename, Mat& _M);
+
+	static Mat trainSVM(CMat &X1f, const vecI &Y, int sT, double C, double bias = -1, double eps = 0.01);
+	static Mat trainSVM(const vector<Mat> &pX1f, const vector<Mat> &nX1f, int sT, double C, double bias = -1, double eps = 0.01, int maxTrainNum = 2000000);
 
 };
