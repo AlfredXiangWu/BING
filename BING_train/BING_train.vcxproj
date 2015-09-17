@@ -101,7 +101,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Program Files\OpenCV\opencv\build\include\opencv;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Program Files\OpenCV\opencv\build\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Program Files\OpenCV\opencv\build\x64\vc11\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

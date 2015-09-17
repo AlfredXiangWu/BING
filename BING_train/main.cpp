@@ -17,7 +17,7 @@ void trainObjectness(int W, int NSS, int numPerSz)
 {
 	// positive samples
 	string imgPath  = "Z:\\Face_DB";
-	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\aflw_list.txt";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\test.txt";
 	string frPath = "Z:\\Face_DB\\fr\\man";
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 

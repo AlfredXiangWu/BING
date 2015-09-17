@@ -12,7 +12,7 @@ DataSet::DataSet(CStr  &_imgPath, CStr &_listPath, CStr &_frPath)
 	imgPathName = loadStrList(listPath);
 	imgPathFr = loadFrList(imgPathName);
 
-	testNum = imgPathName.size();
+	trainNum = imgPathName.size();
 }
 
 string DataSet::replaceExtName(CStr &fName, char* ext)
@@ -68,10 +68,11 @@ vecS DataSet::loadFrList(vecS &imgPathName)
 void DataSet::loadAnnotations()
 {
 	vector<Vec4i> boxes;
-	for (int i = 0; i < testNum; i++)
+	for (int i = 0; i < trainNum; i++)
 	{
 		if(!loadFrs((frPath + "\\" + imgPathFr[i]), boxes))
-			printf("Load %s error\n", imgPathFr[i]);
+			cout << "Load " << imgPathFr[i].c_str() << " error" <<endl;
+			//printf("Load %s error\n", imgPathFr[i].c_str());
 		imgFr.push_back(boxes);
 		boxes.clear();
 	}
@@ -88,7 +89,7 @@ int DataSet::loadFrs(CStr &frName, vector<Vec4i> &boxes)
 		if(!(getline(frIn, line) && line.size()))
 			return false;
 		vecS temp = stringSplit(line, string("\t"));
-		if (temp.size() !=4)
+		if (temp.size() < 4)
 			return false;
 		boxes.push_back(Vec4i(atoi(temp[0].c_str()), atoi(temp[1].c_str()), atoi(temp[2].c_str()), atoi(temp[3].c_str())));
 	}
