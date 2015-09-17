@@ -3,6 +3,8 @@
 #include "ObjectnessTest.h"
 #include "Dataset.h"
 
+#define ILLUSTRATE 1
+
 
 void RunFaceProposal(int W, int NSS, int numPerSz);
 
@@ -25,7 +27,10 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 
 	string savePath = "D:\\BING\\fr";
+
+#if ILLUSTRATE
 	string saveImgPath = "D:\\BING\\Img";
+#endif
 
 	vector<vector<Vec4i>> frsImgs;
 	char fr[_MAX_PATH];
@@ -52,9 +57,12 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 			fprintf(fp, "%d\t%d\t%d\t%d\n", box[0], box[1], box[2], box[3]);
 		}
 		fclose(fp);
+
+#if ILLUSTRATE
 		string temp = saveImgPath + "\\" + dataSet.imgPathName[i] + "_Match.jpg";
 		create_directory_from_filename(temp.c_str());
 		objectNessTest.illuTestReults(imgPath + "\\" +dataSet.imgPathName[i], temp, dataSet.imgFr[i], frsImgs[i]);
+#endif
 	}
 }
 
