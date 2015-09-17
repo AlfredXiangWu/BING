@@ -15,7 +15,7 @@ void ObjectnessTrain::trainObjectnessModel()
 void ObjectnessTrain::generateTrainData()
 {
 	const int trainNum = _dataSet.trainNum;
-	const int NUM_NEG_BOX = 100; // nubmer of negative windows sampled from each image
+	const int NUM_NEG_BOX = 50; // nubmer of negative windows sampled from each image
 	//vector<Mat> xTrainP, xTrainN;
 	xTrainP.reserve(1000000);
 	xTrainN.reserve(1000000);
@@ -25,11 +25,13 @@ void ObjectnessTrain::generateTrainData()
 		const int NUM_GT_BOX = _dataSet.imgFr[i].size();
 		Mat im3u = imread(_dataSet.imgPath + "\\" + _dataSet.imgPathName[i]);
 
+		cout << "Process " << _dataSet.imgPathName[i] << endl;
+
 		// positive samples
 		for (int k =0; k < NUM_GT_BOX; k++)
 		{
 			const Vec4i &bbgt = _dataSet.imgFr[i][k];
-			Vec4i bbs(bbgt[0], bbgt[1], min(bbgt[2], im3u.cols - 1), min(bbgt[3], im3u.rows - 1));
+			Vec4i bbs(max(bbgt[0], 0), max(bbgt[1], 0), min(bbgt[2], im3u.cols - 1), min(bbgt[3], im3u.rows - 1));
 			Mat mag1f, magF1f;
 			mag1f = getFeature(im3u, bbs);
 			// flip the train image
@@ -41,7 +43,7 @@ void ObjectnessTrain::generateTrainData()
 		// negative samples
 		for (int k = 0; k < NUM_NEG_BOX; k++)
 		{
-			int x1 = rand() % im3u.cols, x2 = rand() % im3u.cols;
+			int x1 = rand() % im3u.cols,  x2 = rand() % im3u.cols;
 			int y1 = rand() % im3u.rows, y2 = rand() % im3u.rows;
 
 			if (x1 == x2 || y1 == y2)
