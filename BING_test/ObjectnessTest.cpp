@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "ObjectnessTest.h"
-#include "CmShow.h"
 
 int ObjectnessTest::loadTrainedModel(string modelPath)
 {
@@ -33,13 +32,18 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 		boxesTests[i].reserve(10000);
 
 	// predict
+	CmTimer tm("Predict");
 	printf("Start predicting\n");
+
+	tm.Start();
 	for (int i = 0; i < testNum; i++)
 	{
 		printf("Process %d images..\n", i);
 		Mat img = imread(_dataSet.imgPath + "\\" + _dataSet.imgPathName[i]);
 		getFaceProposaksForPerImgFast(img, boxesTests[i], numDetPerSize);
 	}
+	tm.Stop();
+	printf("Average time for predicting an image is %gs\n", tm.TimeInSeconds()/testNum);
 
 	// save
 	_frsImgs.resize(testNum);
@@ -59,9 +63,9 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 	// predict stage I
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	const int maxFace = min(imgW, imgH);
-	const int minFace = 12;
+	const int minFace = 8;
 	const double maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
-	for (double scale = maxScale; scale >= minScale; scale = scale * 0.9)
+	for (double scale = maxScale; scale >= minScale; scale = scale * 0.95)
 	{
 		int height = cvRound(imgH * scale), width = cvRound(imgW * scale);
 		Mat im3u, matchCost1f, mag1u;
@@ -301,7 +305,7 @@ void ObjectnessTest::evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTest
 		avgScore[i] /= TEST_NUM;
 	}
 
-	int idx[8] = {1, 10, 100, 1000, 2000, 3000, 4000, 5000};
+	int idx[8] = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000};
 	for (int i = 0; i < 8; i++){
 		if (idx[i] > numDet)
 			continue;

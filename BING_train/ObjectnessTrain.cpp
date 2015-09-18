@@ -15,7 +15,7 @@ void ObjectnessTrain::trainObjectnessModel()
 void ObjectnessTrain::generateTrainData()
 {
 	const int trainNum = _dataSet.trainNum;
-	const int NUM_NEG_BOX = 50; // nubmer of negative windows sampled from each image
+	const int NUM_NEG_BOX = 10; // nubmer of negative windows sampled from each image
 	//vector<Mat> xTrainP, xTrainN;
 	xTrainP.reserve(1000000);
 	xTrainN.reserve(1000000);

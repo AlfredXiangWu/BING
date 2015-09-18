@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "FilterBING.h"
-#include "CmShow.h"
 
 
 void FilterBING::update(CMat &w1f){

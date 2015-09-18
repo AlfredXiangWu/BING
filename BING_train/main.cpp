@@ -5,15 +5,15 @@
 #include "ObjectnessTrain.h"
 
 
-void trainObjectness(int W, int NSS, int numPerSz);
+void trainObjectness(int W);
 
 void main(int argc, char* argv)
 {
-	trainObjectness(8, 2, 130);
+	trainObjectness(8);
 }
 
 
-void trainObjectness(int W, int NSS, int numPerSz)
+void trainObjectness(int W)
 {
 	// positive samples
 	string imgPath  = "Z:\\Face_DB";
@@ -25,6 +25,6 @@ void trainObjectness(int W, int NSS, int numPerSz)
 	DataSet dataSet(imgPath, listPath, frPath);
 	dataSet.loadAnnotations();
 
-	ObjectnessTrain objectNessTrain(dataSet, modelPath, 8, 2);
+	ObjectnessTrain objectNessTrain(dataSet, modelPath, W);
 	objectNessTrain.trainObjectnessModel();
 }

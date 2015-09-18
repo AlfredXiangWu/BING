@@ -148,7 +148,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CmShow.cpp" />
     <ClCompile Include="DataSet.cpp" />
     <ClCompile Include="FilterBING.cpp" />
     <ClCompile Include="main.cpp" />
@@ -156,7 +155,7 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CmShow.h" />
+    <ClInclude Include="CmTimer.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FilterBING.h" />
     <ClInclude Include="ObjectnessTest.h" />

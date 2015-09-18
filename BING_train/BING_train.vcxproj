@@ -211,17 +211,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CmShow.h" />
     <ClInclude Include="Dataset.h" />
-    <ClInclude Include="FilterBING.h" />
     <ClInclude Include="ObjectnessTrain.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ValStructVec.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CmShow.cpp" />
     <ClCompile Include="DataSet.cpp" />
-    <ClCompile Include="FilterBING.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjectnessTrain.cpp" />
     <ClCompile Include="stdafx.cpp" />

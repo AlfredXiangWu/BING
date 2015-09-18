@@ -1,5 +1,3 @@
-#include "ValStructVec.h"
-#include "FilterBING.h"
 #include "Dataset.h"
 
 
@@ -9,11 +7,10 @@
 class ObjectnessTrain
 {
 public:
-	ObjectnessTrain(DataSet &dataSet, string modelPath, int W = 8, int NSS = 2)
+	ObjectnessTrain(DataSet &dataSet, string modelPath, int W = 8)
 		: _dataSet(dataSet)
 		, _modelPath(modelPath)
-		, _W(W)
-		, _NSS(NSS){};
+		, _W(W){};
 	~ObjectnessTrain(void){};
 	
 	void trainObjectnessModel();
@@ -21,8 +18,7 @@ public:
 
 private:
 	const int _W;
-	const int _NSS;
-	
+
 	DataSet _dataSet;
 	string _modelPath;
 	vector<Mat> xTrainP, xTrainN;

@@ -78,8 +78,7 @@ template<class T, int D> inline T    vecDist(const Vec<T, D> &v1, const Vec<T, D
 
 inline Rect Vec4i2Rect(Vec4i &v){return Rect(Point(v[0] - 1, v[1] - 1), Point(v[2], v[3])); }
 
-//#include "CmFile.h"
-//#include "CmTimer.h"
+#include "CmTimer.h"
 
 #include <direct.h>  
 #include <io.h> 

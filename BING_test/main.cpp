@@ -3,8 +3,6 @@
 #include "ObjectnessTest.h"
 #include "Dataset.h"
 
-#define ILLUSTRATE 1
-
 
 void RunFaceProposal(int W, int NSS, int numPerSz);
 
@@ -15,7 +13,7 @@ static int create_directory_from_filename(const char *file_name);
 
 void main(int argc, char* argv[])
 {
-	RunFaceProposal(8, 2, 130);
+	RunFaceProposal(8, 1, 130);
 }
 
 void RunFaceProposal(int W, int NSS, int numPerSz)
@@ -28,9 +26,7 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 
 	string savePath = "D:\\BING\\fr";
 
-#if ILLUSTRATE
-	string saveImgPath = "D:\\BING\\Img";
-#endif
+	string saveImgPath = "D:\\BING\\img";
 
 	vector<vector<Vec4i>> frsImgs;
 	char fr[_MAX_PATH];
@@ -40,9 +36,9 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	dataSet.loadAnnotations();
 
 	// predict
-	ObjectnessTest objectNessTest(dataSet, modelPath, 8, 2);
+	ObjectnessTest objectNessTest(dataSet, modelPath, W, NSS);
 	objectNessTest.loadTrainedModel(modelPath);
-	objectNessTest.getFaceProposalsForImgsFast(frsImgs, 130);
+	objectNessTest.getFaceProposalsForImgsFast(frsImgs, numPerSz);
 
 	// save 
 	for (int i = 0; i < frsImgs.size(); i++)
@@ -58,11 +54,9 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 		}
 		fclose(fp);
 
-#if ILLUSTRATE
-		string temp = saveImgPath + "\\" + dataSet.imgPathName[i] + "_Match.jpg";
-		create_directory_from_filename(temp.c_str());
-		objectNessTest.illuTestReults(imgPath + "\\" +dataSet.imgPathName[i], temp, dataSet.imgFr[i], frsImgs[i]);
-#endif
+		string imgSavePath = saveImgPath + "\\" + dataSet.imgPathName[i] + "_Match.jpg";
+		create_directory_from_filename(imgSavePath.c_str());
+		objectNessTest.illuTestReults(imgPath + "\\" +dataSet.imgPathName[i], imgSavePath, dataSet.imgFr[i], frsImgs[i]);
 	}
 }
 
