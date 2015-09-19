@@ -1,7 +1,5 @@
 #include "StdAfx.h"
 #include "ObjectnessTrain.h"
-#include "CmShow.h"
-
 
 void ObjectnessTrain::trainObjectnessModel()
 {

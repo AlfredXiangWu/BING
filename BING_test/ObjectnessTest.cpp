@@ -53,7 +53,6 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 		for (int j = 0; j < boxesTests[i].size(); j++)
 			_frsImgs[i][j] = boxesTests[i][j];
 	}
-
 	evaluatePerImgRecall(_frsImgs, 10000);
 }
 
@@ -64,14 +63,29 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	const int maxFace = min(imgW, imgH);
 	const int minFace = 8;
+	const double scaleStep = 0.95;
 	const double maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
-	for (double scale = maxScale; scale >= minScale; scale = scale * 0.95)
+	
+	const int iter  = (int)(log(minScale/maxScale) / log(scaleStep));
+	vector<double> scale;
+	scale.resize(iter);
+	scale[0] = maxScale;
+	for (int i = 1; i <iter; i++)
 	{
-		int height = cvRound(imgH * scale), width = cvRound(imgW * scale);
+		scale[i] = scale[i-1] * scaleStep;
+	}
+
+	vector<vector<Vec4i>> batchBox;
+	batchBox.resize(iter);
+
+#pragma omp parallel for
+	for (int n = 0; n <iter;n++)
+	{
+		int height = cvRound(imgH * scale[n]), width = cvRound(imgW * scale[n]);
 		Mat im3u, matchCost1f, mag1u;
 
 		// NG feature extract and process
-		resize(img3u, im3u, Size(cvRound(_W / (scale * maxFace / imgW)), cvRound(_W / (scale * maxFace / imgH))));
+		resize(img3u, im3u, Size(cvRound(_W / (scale[n] * maxFace / imgW)), cvRound(_W / (scale[n] * maxFace / imgH))));
 		gradientMag(im3u, mag1u);
 		matchCost1f = _bingF.matchTemplate(mag1u);
 		ValStructVec<float, Point> matchCost;
@@ -80,6 +94,7 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 		// Find true locations 
 		double ratioX = min(height, width)/_W, ratioY = min(height, width)/_W;
 		int iMax = min(matchCost.size(), numDetPerSize);
+		batchBox[n].resize(iMax);
 		for (int i = 0; i < iMax; i++)
 		{
 			float mVal = matchCost(i);
@@ -89,9 +104,13 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 			box[3] = cvRound(min(box[1] + min(height, width), imgH));
 			box[0] ++;
 			box[1] ++;
-			frsPerImg.push_back(box); 
+			batchBox[n][i] = box; 
 		}
 	}
+
+	for (int i = 0; i < iter; i++)
+		for (int j = 0; j < batchBox[i].size(); j++)
+			frsPerImg.push_back(batchBox[i][j]);
 	//NOTE: predict stage II  is not used for our task
 }
 

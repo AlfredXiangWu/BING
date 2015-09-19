@@ -13,7 +13,7 @@ static int create_directory_from_filename(const char *file_name);
 
 void main(int argc, char* argv[])
 {
-	RunFaceProposal(8, 1, 130);
+	RunFaceProposal(8, 2, 130);
 }
 
 void RunFaceProposal(int W, int NSS, int numPerSz)
@@ -21,7 +21,7 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	// configuration
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
 	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
-	string frPath = "Z:\\User\\team02\\data1\\FDDB\\man";
+	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 
 	string savePath = "D:\\BING\\fr";
@@ -43,6 +43,7 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 	// save 
 	for (int i = 0; i < frsImgs.size(); i++)
 	{
+		//cout << dataSet.imgPathFr[i].c_str() << "is saving" <<endl;
 		sprintf(fr, "%s/%s", savePath.c_str(), dataSet.imgPathFr[i].c_str());
 		create_directory_from_filename(fr);
 		FILE *fp = fopen(fr, "wt");
@@ -53,7 +54,6 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 			fprintf(fp, "%d\t%d\t%d\t%d\n", box[0], box[1], box[2], box[3]);
 		}
 		fclose(fp);
-
 		string imgSavePath = saveImgPath + "\\" + dataSet.imgPathName[i] + "_Match.jpg";
 		create_directory_from_filename(imgSavePath.c_str());
 		objectNessTest.illuTestReults(imgPath + "\\" +dataSet.imgPathName[i], imgSavePath, dataSet.imgFr[i], frsImgs[i]);

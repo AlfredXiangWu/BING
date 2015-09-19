@@ -49,6 +49,7 @@ vecS DataSet::loadStrList(CStr &fName)
 	vecS strs;
 	while(getline(fIn, line) && line.size())
 		strs.push_back(line);
+	fIn.close();
 	return strs;
 }
 
@@ -92,6 +93,7 @@ int DataSet::loadFrs(CStr &frName, vector<Vec4i> &boxes)
 			return false;
 		boxes.push_back(Vec4i(atoi(temp[0].c_str()), atoi(temp[1].c_str()), atoi(temp[2].c_str()), atoi(temp[3].c_str())));
 	}
+	frIn.close();
 	return true;
 }
 

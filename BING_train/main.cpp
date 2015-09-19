@@ -1,6 +1,5 @@
 
 #include "stdafx.h"
-#include "ValStructVec.h"
 #include "Dataset.h"
 #include "ObjectnessTrain.h"
 
