@@ -6,6 +6,8 @@
 
 void RunFaceProposal(int W, int NSS, int numPerSz);
 
+void cnnFaceDetection();
+
 static int create_directory(const char *directory);
 static int get_dir_from_filename(const char *file_name, char *dir);
 static int create_directory_from_filename(const char *file_name);
@@ -13,14 +15,14 @@ static int create_directory_from_filename(const char *file_name);
 
 void main(int argc, char* argv[])
 {
-	RunFaceProposal(8, 2, 130);
+	RunFaceProposal(8, 2, 150);
 }
 
 void RunFaceProposal(int W, int NSS, int numPerSz)
 {
 	// configuration
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
-	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\test.txt";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
 	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 

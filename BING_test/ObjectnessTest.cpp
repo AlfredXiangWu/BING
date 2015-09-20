@@ -7,7 +7,6 @@ int ObjectnessTest::loadTrainedModel(string modelPath)
 		modelPath = _modelPath;
 	
 	string s1 = modelPath + "\\" + "ObjNessB2W8MAXBGR.wS1";
-	string s2 = modelPath + "\\" + "ObjNessB2W8MAXBGR.wS2";
 	Mat filters1f, reW1f;
 	if (!matRead(s1, filters1f))
 	{
@@ -37,6 +36,8 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 	printf("Start predicting\n");
 
 	tm.Start();
+
+//#pragma omp parallel for
 	for (int i = 0; i < testNum; i++)
 	{
 		printf("Process %d images..\n", i);
@@ -64,8 +65,8 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	const int maxFace = min(imgW, imgH);
 	const int minFace = 8;
-	const double scaleStep = 1.1;
-	const double maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
+	const double scaleStep = 1.15;
+	const double maxScale = float(_W) / minFace, minScale = float(_W) / maxFace;
 	
 	const int iter  = (int)(log(maxScale/minScale) / log(scaleStep));
 	vector<double> scale;
