@@ -15,6 +15,7 @@ int ObjectnessTest::loadTrainedModel(string modelPath)
 		return false;
 	}
 
+	_bingF.update(filters1f);
 	CV_Assert(filters1f.type() == CV_32F);
 	_svmFilter = filters1f;
 
