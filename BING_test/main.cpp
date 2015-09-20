@@ -2,11 +2,12 @@
 #include "ValStructVec.h"
 #include "ObjectnessTest.h"
 #include "Dataset.h"
+#include "CnnFace.h"
 
 
 void RunFaceProposal(int W, int NSS, int numPerSz);
 
-void cnnFaceDetection();
+void cnnFaceDetectionTest();
 
 static int create_directory(const char *directory);
 static int get_dir_from_filename(const char *file_name, char *dir);
@@ -15,16 +16,19 @@ static int create_directory_from_filename(const char *file_name);
 
 void main(int argc, char* argv[])
 {
-	RunFaceProposal(8, 2, 150);
+	//RunFaceProposal(8, 2, 150);   // BING test
+
+	cnnFaceDetectionTest();			// cnn face detection
 }
 
+// BING test code
 void RunFaceProposal(int W, int NSS, int numPerSz)
 {
 	// configuration
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
 	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
 	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
-	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
+	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\ObjNessB2W8MAXBGR.wS1";
 
 	string savePath = "D:\\BING\\fr";
 
@@ -59,6 +63,42 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 		string imgSavePath = saveImgPath + "\\" + dataSet.imgPathName[i] + "_Match.jpg";
 		create_directory_from_filename(imgSavePath.c_str());
 		objectNessTest.illuTestReults(imgPath + "\\" +dataSet.imgPathName[i], imgSavePath, dataSet.imgFr[i], frsImgs[i]);
+	}
+}
+
+// cnn face detection test
+void cnnFaceDetectionTest()
+{
+	// configuration
+	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\test.txt";
+	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
+	string bingModelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\ObjNessB2W8MAXBGR.wS1";
+	string cnnModelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\24_detection.bin";
+
+	const int W = 8, NSS = 2, numPerSz = 150;
+
+	vector<Vec4i> boxTestStageI;
+	vector<Vec4i> boxTestStageII;
+	char fr[_MAX_PATH];
+
+	// load image
+	DataSet dataSet(imgPath, listPath, frPath);
+	dataSet.loadAnnotations();
+
+	// predict
+	ObjectnessTest objectNessTest(dataSet, bingModelPath, W, NSS);
+	objectNessTest.loadTrainedModel(bingModelPath);
+	for(int i = 0; i < dataSet.testNum; i++)
+	{
+		// face detection Stage I: get face region proposal
+		boxTestStageI.clear();
+		printf("Process %d images..\n", i);
+		Mat img = imread(dataSet.imgPath + "\\" + dataSet.imgPathName[i]);
+		boxTestStageI.reserve(10000);
+		objectNessTest.getFaceProposaksForPerImgFast(img, boxTestStageI, numPerSz);
+
+		// 
 	}
 }
 

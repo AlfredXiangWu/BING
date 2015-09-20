@@ -6,9 +6,8 @@ int ObjectnessTest::loadTrainedModel(string modelPath)
 	if (modelPath.size() == 0)
 		modelPath = _modelPath;
 	
-	string s1 = modelPath + "\\" + "ObjNessB2W8MAXBGR.wS1";
 	Mat filters1f, reW1f;
-	if (!matRead(s1, filters1f))
+	if (!matRead(modelPath, filters1f))
 	{
 		printf("Cannot load model\n");
 		return false;

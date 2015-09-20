@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmTimer.h" />
+    <ClInclude Include="CnnFace.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FilterBING.h" />
     <ClInclude Include="ObjectnessTest.h" />
