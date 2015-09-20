@@ -20,7 +20,7 @@ void RunFaceProposal(int W, int NSS, int numPerSz)
 {
 	// configuration
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
-	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\test.txt";
 	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
 	string modelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model";
 

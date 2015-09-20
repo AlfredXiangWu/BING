@@ -63,13 +63,13 @@ void ObjectnessTest::getFaceProposaksForPerImgFast(Mat &img3u, vector<Vec4i> &fr
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	const int maxFace = min(imgW, imgH);
 	const int minFace = 8;
-	const double scaleStep = 0.95;
+	const double scaleStep = 1.1;
 	const double maxScale = 8.0 / minFace, minScale = 8.0 / maxFace;
 	
-	const int iter  = (int)(log(minScale/maxScale) / log(scaleStep));
+	const int iter  = (int)(log(maxScale/minScale) / log(scaleStep));
 	vector<double> scale;
 	scale.resize(iter);
-	scale[0] = maxScale;
+	scale[0] = minScale;
 	for (int i = 1; i <iter; i++)
 	{
 		scale[i] = scale[i-1] * scaleStep;
