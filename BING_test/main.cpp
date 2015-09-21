@@ -71,17 +71,19 @@ void cnnFaceDetectionTest()
 {
 	// configuration
 	string imgPath  = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\originalPics";
-	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\test.txt";
+	string listPath = "Z:\\User\\wuxiang\\data\\face_detection\\FDDB\\FDDB_list.txt";
 	string frPath = "Z:\\Temp\\CNN_Face_Detection\\fr\\man";
 	string bingModelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\ObjNessB2W8MAXBGR.wS1";
 	string cnnModelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\24_detection.bin";
+	string savePath = "D:\\BING\\fr";
 
 	const int W = 8, NSS = 2, numPerSz = 150;
 	const int netSize = 24, netProbLayer = 5;
-	const float thr = 0.5;
+	const float thr = 0.4;
 
 	vector<Vec4i> boxTestStageI;
 	ValStructVec<float, Vec4i> boxTestStageII;
+	ValStructVec<float, Vec4i> box;
 	char fr[_MAX_PATH];
 
 	// load image
@@ -94,6 +96,9 @@ void cnnFaceDetectionTest()
 	CnnFace cnn(cnnModelPath, netSize, netProbLayer);
 	cnn.loadTrainedModel();
 
+
+	CmTimer tm("Predict");
+	tm.Start();
 	for(int i = 0; i < dataSet.testNum; i++)
 	{
 		// face detection Stage I: get face region proposal
@@ -106,7 +111,24 @@ void cnnFaceDetectionTest()
 		// cnn 
 		cnn.getFaceDetectionPerImg(img, boxTestStageI, boxTestStageII, thr);
 
+		// nms
+		cnn.nonMaxSup(boxTestStageII, box, 0.2);
+
+		// save
+		sprintf(fr, "%s/%s", savePath.c_str(), dataSet.imgPathFr[i].c_str());
+		create_directory_from_filename(fr);
+		FILE *fp = fopen(fr, "wt");
+		fprintf(fp, "%d\n", box.size());
+		for (int j = 0; j < box.size(); j++)
+		{
+			Vec4i &out = box[j];
+			fprintf(fp, "%d\t%d\t%d\t%d\t%f\n", out[0], out[1], out[2], out[3], box(j));
+		}
+		fclose(fp);
+		img.~Mat();
 	}
+	tm.Stop();
+	printf("Average time for predicting an image is %gs\n", tm.TimeInSeconds()/dataSet.testNum);
 }
 
 static int create_directory(const char *directory)

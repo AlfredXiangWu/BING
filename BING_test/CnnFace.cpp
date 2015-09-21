@@ -52,3 +52,32 @@ void CnnFace::getFaceDetectionPerImg(Mat &img3u, vector<Vec4i> &boxProposal, Val
 	free(data);
 	data = NULL;
 }
+
+
+void CnnFace::nonMaxSup(ValStructVec<float, Vec4i> &input, ValStructVec<float, Vec4i> &output, float IoU)
+{
+	input.sort();
+	output.reserve(input.size());
+	vector<bool> mask;
+	mask.resize(input.size());
+	for (int i = 0; i < input.size(); i++)
+		mask[i] = true;
+
+	for (int i = 0; i < input.size() - 1; i++)
+	{
+		if (!mask[i])
+			continue;
+		Vec4i &box1 = input[i];
+		mask[i] = false;
+		output.pushBack(input(i), box1);
+		for(int j = i+1; j < input.size();j++)
+		{
+			if (!mask[j])
+				continue;
+			Vec4i &box2 = input[j];
+			double score = interUnio(box1, box2);
+			if (score > IoU)
+				mask[j] = false;
+		}
+	}
+}

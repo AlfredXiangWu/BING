@@ -115,8 +115,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Program Files\OpenCV\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files\OpenCV\opencv\build\x64\vc11\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\svn\Algorithm\wuxiang\Code\C\BING\cnnAPI_lib;D:\Program Files\OpenCV\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\svn\Algorithm\wuxiang\Code\C\BING\cnnAPI_lib;D:\Program Files\OpenCV\opencv\build\x64\vc11\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -199,7 +199,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opencv_core249.lib;opencv_imgproc249.lib;opencv_highgui249.lib;opencv_ml249.lib;opencv_video249.lib;opencv_features2d249.lib;opencv_calib3d249.lib;opencv_objdetect249.lib;opencv_contrib249.lib;opencv_legacy249.lib;opencv_flann249.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cnnAPI_Release.lib;libopenblas.lib;opencv_core249.lib;opencv_imgproc249.lib;opencv_highgui249.lib;opencv_ml249.lib;opencv_video249.lib;opencv_features2d249.lib;opencv_calib3d249.lib;opencv_objdetect249.lib;opencv_contrib249.lib;opencv_legacy249.lib;opencv_flann249.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
