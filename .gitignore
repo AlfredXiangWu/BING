@@ -20,7 +20,7 @@
 *.lai
 *.la
 *.a
-*.lib
+
 
 # Executables
 *.exe
@@ -91,7 +91,6 @@ $RECYCLE.BIN/
 *.[Cc]ache
 *.ilk
 *.log
-*.lib
 *.sbr
 *.sdf
 *.opensdf

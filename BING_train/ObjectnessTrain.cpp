@@ -81,7 +81,7 @@ void ObjectnessTrain::trainStageI()
 	for (int r = 0; r < xN1f.rows; r++)
 		nX.push_back(xN1f.row(r));
 
-	Mat crntW = trainSVM(pX, nX, L1R_L2LOSS_SVC, 10, 1);
+	Mat crntW = trainSVM(pX, nX, L1R_L2LOSS_SVC, 1, 1);
 	crntW = crntW.colRange(0, crntW.cols - 1).reshape(1, _W);
 	CV_Assert(crntW.size() == Size(_W, _W));
 	matWrite(_modelPath + "\\" + "ObjNessB2W8MAXBGR" + ".wS1", crntW);

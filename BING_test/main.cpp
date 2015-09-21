@@ -77,9 +77,11 @@ void cnnFaceDetectionTest()
 	string cnnModelPath = "D:\\svn\\Algorithm\\wuxiang\\Code\\C\\BING\\model\\24_detection.bin";
 
 	const int W = 8, NSS = 2, numPerSz = 150;
+	const int netSize = 24, netProbLayer = 5;
+	const float thr = 0.5;
 
 	vector<Vec4i> boxTestStageI;
-	vector<Vec4i> boxTestStageII;
+	ValStructVec<float, Vec4i> boxTestStageII;
 	char fr[_MAX_PATH];
 
 	// load image
@@ -89,6 +91,9 @@ void cnnFaceDetectionTest()
 	// predict
 	ObjectnessTest objectNessTest(dataSet, bingModelPath, W, NSS);
 	objectNessTest.loadTrainedModel(bingModelPath);
+	CnnFace cnn(cnnModelPath, netSize, netProbLayer);
+	cnn.loadTrainedModel();
+
 	for(int i = 0; i < dataSet.testNum; i++)
 	{
 		// face detection Stage I: get face region proposal
@@ -98,13 +103,15 @@ void cnnFaceDetectionTest()
 		boxTestStageI.reserve(10000);
 		objectNessTest.getFaceProposaksForPerImgFast(img, boxTestStageI, numPerSz);
 
-		// 
+		// cnn 
+		cnn.getFaceDetectionPerImg(img, boxTestStageI, boxTestStageII, thr);
+
 	}
 }
 
 static int create_directory(const char *directory)
 {
-	int i;
+	  int i;
 	  int len;
 	  char dir[_MAX_PATH], temp_dir[_MAX_PATH];
 

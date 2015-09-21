@@ -22,7 +22,9 @@ void trainObjectness(int W)
 
 	// load train image
 	DataSet dataSet(imgPath, listPath, frPath);
+	cout << "loading annotations.."<<endl;
 	dataSet.loadAnnotations();
+	cout << "loading anootations is finished.."<<endl;
 
 	ObjectnessTrain objectNessTrain(dataSet, modelPath, W);
 	objectNessTrain.trainObjectnessModel();
