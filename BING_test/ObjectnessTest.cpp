@@ -36,7 +36,7 @@ void ObjectnessTest::getFaceProposalsForImgsFast(vector<vector<Vec4i>> &_frsImgs
 
 	tm.Start();
 
-//#pragma omp parallel for
+#pragma omp parallel for
 	for (int i = 0; i < testNum; i++)
 	{
 		printf("Process %d images..\n", i);
@@ -288,6 +288,7 @@ void ObjectnessTest::nonMaxSup(CMat &matchCost1f, ValStructVec<float, Point> &ma
 	}
 }
 
+// compute recall per image and then get average of recall for dataset
 void ObjectnessTest::evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTests, const int numDet)
 {
 	vecD recalls(numDet);
@@ -334,7 +335,7 @@ void ObjectnessTest::evaluatePerImgRecall(const vector<vector<Vec4i>> &boxesTest
 	printf("\n");
 }
 
-void ObjectnessTest::illuTestReults(string &imgPath, string &savePath, const vector<Vec4i> &gtBoxesTest, const vector<Vec4i> &boxesTests)
+void ObjectnessTest::illuTestReults(string &imgPath, string &savePath, const vector<Vec4i> &gtBoxesTest, const vector<Vec4i> &boxesTests, ValStructVec<float, Vec4i> &box)
 {
 	const int gtNumCrnt = gtBoxesTest.size();
 	Mat img = imread(imgPath);
@@ -345,7 +346,8 @@ void ObjectnessTest::illuTestReults(string &imgPath, string &savePath, const vec
 	for (int j = 0; j < boxesTests.size(); j++)
 	{
 		const Vec4i &bb = boxesTests[j];
-		for (int k = 0; k < gtNumCrnt; k++)	{
+		for (int k = 0; k < gtNumCrnt; k++)	
+		{
 			double mVal = DataSet::interUnio(boxesTests[j], gtBoxesTest[k]);
 			if (mVal < score[k])
 				continue;
@@ -360,6 +362,10 @@ void ObjectnessTest::illuTestReults(string &imgPath, string &savePath, const vec
 		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(0), 3);
 		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(255, 255, 255), 2);
 		rectangle(img, Point(bb[0], bb[1]), Point(bb[2], bb[3]), Scalar(0, 0, 255), 1);
+		if (score[k] < 0.5)
+		{
+			box.pushBack(score[k], bb);
+		}
 	}
 
 	imwrite(savePath, img);
